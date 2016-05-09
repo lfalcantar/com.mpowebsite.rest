@@ -19,9 +19,14 @@
       <param-value>com.mpowebsite.rest</param-value>
     </init-param>
     <load-on-startup>1</load-on-startup>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>MPO REST Service</servlet-name>
-    <url-pattern>/api/*</url-pattern>
-  </servlet-mapping>
+    </servlet>
+    <servlet-mapping>
+      <servlet-name>MPO REST Service</servlet-name>
+      <url-pattern>/api/*</url-pattern>
+    </servlet-mapping>
+    
+    
+    <wls:prefer-application-packages>
+      <wls:package-name>com.sun.jersey</wls:package-name>
+    </wls:prefer-application-packages>
 </web-app>

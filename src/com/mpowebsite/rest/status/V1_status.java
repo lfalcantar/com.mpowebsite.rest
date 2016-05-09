@@ -6,7 +6,7 @@ import javax.ws.rs.core.MediaType;
 public class V1_status {
 	
 	private final String api_version = "00.01";
-	
+
 	@GET
 	@Produces(MediaType.TEXT_HTML)
 	public String returnTitle(){
