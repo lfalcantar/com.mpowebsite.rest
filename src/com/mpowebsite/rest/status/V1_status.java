@@ -10,13 +10,7 @@ public class V1_status {
 	@GET
 	@Produces(MediaType.TEXT_HTML)
 	public String returnTitle(){
-		return "<p>Java Web Service</p>";
+		return "<p>Java Web Service "+ api_version+"</p>";
 	}
 	
-	@Path("/version")
-	@GET
-	@Produces(MediaType.TEXT_HTML)
-	public String returnVersion(){
-		return "<p>Version</p>" + api_version;
-	}
 }
