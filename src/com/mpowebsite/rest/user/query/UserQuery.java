@@ -10,6 +10,7 @@ import java.sql.*;
 import com.mpowebsite.rest.db.*;
 import com.mpowebsite.rest.users.Administrator;
 import com.mpowebsite.rest.users.AuthenticatedUser;
+import com.mpowebsite.rest.users.MpoLead;
 import com.mpowebsite.rest.users.User;
 import com.mpowebsite.rest.util.ToJSON;
 
@@ -20,51 +21,23 @@ import com.mpowebsite.rest.util.ToJSON;
  */
 
 public class UserQuery { 
-	//CHANGE: This method need to be fix.
-	public static String  addAdministrator(Administrator admin)throws Exception {
-		PreparedStatement query = null;
-		String result = " ";
-		Connection conn = null;
-		
-		try {
-			conn = DbConnection.MpoDbConnection().getConnection();
-			query = conn.prepareStatement("Select * FROM SYSTEM_USERS");
-			ResultSet rs = query.executeQuery();
-			// CHANGE: Add functional 
-			
-			while(rs.next()){
-				result += rs.getString("USER_FirstName");
-			}
-			
-			query.close();
-			
-		} catch (Exception e) {
-			// TODO: handle exception
-		}finally {
-			if(conn != null)
-				conn.close();
-		}
-		System.out.println(result);
-		return result;	
-	}
-	
-	
 	/**
 	 * This method will get the all the information from a user out of the user unique id. 
 	 */
-	public static Response  getUser()throws Exception {
+	public static Response getUser()throws Exception {
 		PreparedStatement query = null;
 		Connection conn = null;
 		String returnString = null;
 		Response result = null;
 
 		try {
-			conn = DbConnection.MpoDbConnection().getConnection();
+			conn = DbConnection.mpoDbConnection().getConnection();
+
 			query = conn.prepareStatement("Select * FROM SYSTEM_USERS");
 			/*Execute query*/
 			ResultSet resutlSet = query.executeQuery();
 			
-			/*Convert to Json rs*/
+			/*Convert to Json */
 			ToJSON converter = new ToJSON();
 			JSONArray json = new JSONArray();
 			
@@ -89,17 +62,113 @@ public class UserQuery {
 		return result;	
 	}
 	
+
+	public static void createUser(AuthenticatedUser user) throws Exception{
+		PreparedStatement query = null;
+		Connection conn = null;
+
+		try {
+			conn = DbConnection.mpoDbConnection().getConnection();
+			query = insertUserQuery(conn,user);
+			/*Execute query*/
+			query.executeUpdate();
+			
+			/*Close connection*/
+			query.close();
+						
+		} catch (Exception e) {
+			
+			if(e.getClass().equals("com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException"))
+				System.out.println("Repeted  Entry");
+		}finally {
+			if(conn != null) conn.close();
+		}	
+	}
+	
+	
+	private static PreparedStatement insertUserQuery(Connection conn, AuthenticatedUser user) throws SQLException {
+	   PreparedStatement query = null;
+	   
+	   query = conn.prepareStatement("INSERT INTO SYSTEM_USERS VALUES (? , ? , ? , ? , ? , ?, ?, ? , ?, ?, ?, ?)");
+	   query.setString(1, user.getId());	  
+	   query.setString(2, user.getEmail());
+	   query.setString(3, user.getPassword());
+	   query.setString(4, user.getFirstName());
+	   query.setString(5, user.getMiddleName());
+	   query.setString(6, user.getLastNAme());
+	   query.setString(7, user.getOrganization());
+	   query.setString(8, user.getDepartment());
+	   query.setString(9, user.getPositionTitle());
+	   query.setString(10, user.getDepartmentContactInformation());
+	   query.setString(11, user.getType().toString());
+	   query.setString(12, user.getPermissions()+"");
+	  		
+	   return query;
+	}
+
+
 	/**
-	 * 
-	 * @param user
-	 * @return
-	 * @author LEE
+	 * This method will verify that the User id will be unique
 	 */
-	public static String createQuery(AuthenticatedUser user){
-		String query = new String();
-		query = "";
-		return query;
+	public static boolean  uniqueId(String id)throws Exception {
+		PreparedStatement query = null;
+		Connection conn = null;
+		boolean guard = false;
+
+		try {
+			conn = DbConnection.mpoDbConnection().getConnection();
+			query = conn.prepareStatement("Select USER_ID FROM SYSTEM_USERS WHERE USER_ID = ? ");
+			
+			/*Add the values to the query*/
+			query.setString(1,  id);
+			
+			/*Execute query*/
+			ResultSet resutlSet = query.executeQuery();
+			
+			/*if the result set is empty there no similar id*/
+			if(!resutlSet.next()){
+				guard =  true;
+			}
+			
+			/*Close connection*/
+			query.close();
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			System.out.println("USERQUERY-UNIQUEID-DEBUGG");
+		}finally {
+			if(conn != null) conn.close();
+		}
+		
+		return guard;
+	}
+
+
+	public static void deleteUser(String id) throws SQLException {
+		PreparedStatement query = null;
+		Connection conn = null;
+
+		try {
+			conn = DbConnection.mpoDbConnection().getConnection();
+			query = conn.prepareStatement("DELETE FROM  USER_ID  WHERE USER_ID = ? ");
+			
+			/*Add the values to the query*/
+			query.setString(1,  id);
+			
+			/*Execute query*/
+			query.executeUpdate();
+			
+			/*Close connection*/
+			query.close();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			if(conn != null) conn.close();
+		}
 		
 	}
+	
+	
 	
 }

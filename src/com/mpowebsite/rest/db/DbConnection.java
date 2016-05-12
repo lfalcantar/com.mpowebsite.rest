@@ -1,5 +1,6 @@
 package com.mpowebsite.rest.db;
 
+import java.sql.Connection;
 import javax.naming.*;
 import javax.sql.*;
 
@@ -16,7 +17,7 @@ public class DbConnection {
 	private static DataSource mpoDatabase = null;
 	private static Context context = null;
 	
-	public static DataSource MpoDbConnection()throws Exception{
+	public static DataSource mpoDbConnection()throws Exception{
 		
 		if(mpoDatabase != null)
 			return mpoDatabase;
@@ -36,6 +37,5 @@ public class DbConnection {
 		}
 		
 		return mpoDatabase;
-	}
-	
+	}	
 }

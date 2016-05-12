@@ -1,12 +1,16 @@
 package com.mpowebsite.rest.users;
 
 import java.sql.*;
+import java.util.HashMap;
+
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 
 import org.codehaus.jettison.json.JSONArray;
 import com.mpowebsite.rest.db.*;/*Database*/
 import com.mpowebsite.rest.user.query.UserQuery;
+import com.mpowebsite.rest.util.*;
+
 import com.mpowebsite.rest.util.*;
 
 /**
@@ -19,29 +23,35 @@ public class Administrator extends AuthenticatedUser {
 
 	@Path("/Create")
 	@GET
-	@Produces(MediaType.TEXT_HTML)
-	public String createUser() {
-		//UserType user, String[] characteristics
-		//switch (user) {
-		//caseADMINISTRATOR:
-		 String [] characteristics= new String[2];
+	public void createUser(@QueryParam("email") String email,@QueryParam("password") String password, @QueryParam("firstName") String firstName,
+						   @QueryParam("middleName") String middleName, @QueryParam("lastName") String LastName, @QueryParam("organizations") String organizations, 
+						   @QueryParam("department") String Department, @QueryParam("title") String title, @QueryParam("phone") String phone, 
+						   @QueryParam("userType") UserType type, @QueryParam("permissions") byte permissions) throws Exception {
+				
+		HashMap<String,	String> user = new HashMap<String, String>();
+		/*User Fields*/
+		user.put("email", email);
+		user.put("password", password);
+		user.put("firstName", firstName);
+		user.put("middleName", middleName);
+		user.put("lastName", LastName);
+		user.put("organizations", organizations);
+		user.put("department", Department);
+		user.put("phone", phone);
+		user.put("title",title);
 		
-		  return UserAccount.createUser(new Administrator(), characteristics);
-		  
-//			break;
-//		case MPO_LEAD:
-//		   return UserAccount.createUser(new MpoLead(), characteristics);
-//			break;
-//		case MPO_STAFF:
-//		   return UserAccount.createUser(new MpoStaff(), characteristics);
-//			break;
-//		case PROJECT_LEAD:
-//		   return UserAccount.createUser(new ProjectLead(), characteristics);
-//			break;
-		//}
+		UserAccount.createUser(type,permissions,user );
 	}
 	
-	@Path("/Get")
+	@Path("/Create")
+	@GET
+	public void deleteUser(@QueryParam("id") String id) throws Exception {
+				
+		UserAccount.deleteUser(id);
+	}
+	
+	
+	@Path("/GetUsers")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getUser() {
@@ -55,5 +65,7 @@ public class Administrator extends AuthenticatedUser {
 		}
 		return resutl;
 	}
+	
+	
 	
 }

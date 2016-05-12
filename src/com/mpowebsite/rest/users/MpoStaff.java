@@ -1,5 +1,5 @@
 package com.mpowebsite.rest.users;
 
-public class MpoStaff {
+public class MpoStaff  extends AuthenticatedUser{
 
 }
