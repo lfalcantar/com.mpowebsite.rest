@@ -1,5 +1,6 @@
 package com.mpowebsite.rest.users;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 
 import com.mpowebsite.rest.user.query.UserQuery;
@@ -147,7 +148,7 @@ public class UserAccount {
 
 	}
 
-	public static void deleteUser(String id) {
+	public static void deleteUser(String id) throws SQLException {
 		// TODO Auto-generated method stub
 		UserQuery.deleteUser(id);
 	}
