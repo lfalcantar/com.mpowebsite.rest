@@ -61,8 +61,60 @@ public class UserQuery {
 
 		return result;	
 	}
-	
+	/**
+	 * THis method will retuyrn a single user from the database
+	 * @param id
+	 * @return
+	 * @throws Exception
+	 */
+	public static Response getUser(String id)throws Exception {
+		PreparedStatement query = null;
+		Connection conn = null;
+		String returnString = null;
+		Response result = null;
 
+		try {
+			conn = DbConnection.mpoDbConnection().getConnection();
+
+			query = conn.prepareStatement("Select * FROM SYSTEM_USERS WHERE USER_ID = ?");
+			
+			/*Add parameters*/
+			query.setString(1, id);
+			
+			/*Execute query*/
+			ResultSet resutlSet = query.executeQuery();
+			
+			
+			/*Convert to Json */
+			ToJSON converter = new ToJSON();
+			JSONArray json = new JSONArray();
+			
+			/*Generate json array*/
+			json = converter.toJSONArray(resutlSet);
+			
+			/*Close connection*/
+			query.close();
+			
+			/*Transform it in response form*/
+			returnString = json.toString();
+			result = Response.ok(returnString).build();
+			
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+		}finally {
+			if(conn != null)
+				conn.close();
+		}
+
+		return result;	
+	}
+	
+	/**
+	 * This method is used to create a new user and installed in the database
+	 * @param user
+	 * @throws Exception
+	 */
 	public static void createUser(AuthenticatedUser user) throws Exception{
 		PreparedStatement query = null;
 		Connection conn = null;
@@ -85,7 +137,13 @@ public class UserQuery {
 		}	
 	}
 	
-	
+	/**
+	 * This method is used to generate the query to insert a user
+	 * @param conn
+	 * @param user
+	 * @return
+	 * @throws SQLException
+	 */
 	private static PreparedStatement insertUserQuery(Connection conn, AuthenticatedUser user) throws SQLException {
 	   PreparedStatement query = null;
 	   
@@ -143,7 +201,12 @@ public class UserQuery {
 		return guard;
 	}
 
-
+	/**
+	 * This method is used to delete a user based on the 
+	 * unique id
+	 * @param id
+	 * @throws SQLException
+	 */
 	public static void deleteUser(String id) throws SQLException {
 		PreparedStatement query = null;
 		Connection conn = null;
@@ -169,6 +232,37 @@ public class UserQuery {
 		
 	}
 	
-	
+	public static String logIn(String user, String password) throws Exception{
+		PreparedStatement query = null;
+		Connection conn = null;
+		String result = "fail";
+
+		try {
+			conn = DbConnection.mpoDbConnection().getConnection();
+
+			query = conn.prepareStatement("Select * FROM SYSTEM_USERS WHERE USER_Email = ? AND USER_Password = ?");
+			query.setString(1, user);
+			query.setString(2, password);
+			
+			/*Execute query*/
+			ResultSet resutlSet = query.executeQuery();
+		
+			if(resutlSet.next())
+				result = "success";
+			
+			/*Close connection*/
+			query.close();
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+		}finally {
+			if(conn != null){
+				conn.close();
+			}
+			
+		}
+
+		return result;	
+	}
 	
 }

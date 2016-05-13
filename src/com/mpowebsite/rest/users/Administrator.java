@@ -18,7 +18,7 @@ import com.mpowebsite.rest.util.*;
  * @author Luis Alcantar
  */
 
-@Path("/Users")
+@Path("/User")
 public class Administrator extends AuthenticatedUser {
 
 	@Path("/Create")
@@ -43,18 +43,17 @@ public class Administrator extends AuthenticatedUser {
 		UserAccount.createUser(type,permissions,user );
 	}
 	
-	@Path("/Create")
+	@Path("/delete")
 	@GET
 	public void deleteUser(@QueryParam("id") String id) throws Exception {
-				
-		UserAccount.deleteUser(id);
+		UserQuery.deleteUser(id);
 	}
 	
 	
 	@Path("/GetUsers")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getUser() {
+	public Response getUsers() {
 	
 		Response resutl = null;
 		try {
@@ -66,6 +65,20 @@ public class Administrator extends AuthenticatedUser {
 		return resutl;
 	}
 	
+	@Path("/GetUser")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getUser(@QueryParam("id") String id) {
+	
+		Response resutl = null;
+		try {
+			resutl =  UserQuery.getUser(id);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return resutl;
+	}
 	
 	
 }

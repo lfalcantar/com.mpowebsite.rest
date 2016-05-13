@@ -1,7 +1,15 @@
 package com.mpowebsite.rest.users;
 
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
+
+import com.mpowebsite.rest.user.query.UserQuery;
 import com.mpowebsite.rest.util.*;
 
+@Path("/User")
 public class AuthenticatedUser extends User {
 
 	private String id;
@@ -17,6 +25,13 @@ public class AuthenticatedUser extends User {
 	private String email;
 	private byte permissions;
 	private UserType type;
+	
+	@Path("/login")
+	@GET
+	@Produces(MediaType.TEXT_HTML)
+	public String deleteUser(@QueryParam("user") String user,@QueryParam("password") String password) throws Exception {
+		return UserQuery.logIn(user,password);
+	}
 
 	public String getId() {
 		return id;

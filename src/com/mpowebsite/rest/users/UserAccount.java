@@ -41,10 +41,7 @@ public class UserAccount {
 	 */
 	private static void createUser(Administrator administrator, byte permissions, HashMap<String, String> userFields) throws Exception{	
 		// TODO Auto-generated method stub
-		System.out.println("DEBUGGING-USERACCOUNT");
 		administrator = populateUser(administrator, permissions, userFields);
-		System.out.println("DEBUGGING-StopHERE");
-
 		UserQuery.createUser(administrator);
 	}
 	
@@ -146,14 +143,5 @@ public class UserAccount {
 			
 		return mpoLead;
 
-	}
-
-	public static void deleteUser(String id) throws SQLException {
-		// TODO Auto-generated method stub
-		UserQuery.deleteUser(id);
-	}
-
-
-
-	
+	}	
 }
