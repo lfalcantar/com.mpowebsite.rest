@@ -1,15 +1,17 @@
 package com.mpowebsite.rest.users;
 
-import javax.ws.rs.GET;
+import javax.ws.rs.FormParam;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+
 
 import com.mpowebsite.rest.user.query.UserQuery;
 import com.mpowebsite.rest.util.*;
+import javax.ws.rs.core.*;
 
-@Path("/User")
+@Path("/login")
 public class AuthenticatedUser extends User {
 
 	private String id;
@@ -26,11 +28,11 @@ public class AuthenticatedUser extends User {
 	private byte permissions;
 	private UserType type;
 	
-	@Path("/login")
-	@GET
+	@Path("/log")
+	@POST
 	@Produces(MediaType.TEXT_HTML)
-	public String deleteUser(@QueryParam("user") String user,@QueryParam("password") String password) throws Exception {
-		return UserQuery.logIn(user,password);
+	public Response deleteUser(@FormParam("user") String user,@FormParam("password") String password) throws Exception {
+		 return Response.ok(UserQuery.logIn(user,password)).header("Access-Control-Allow-Origin", "*").build();
 	}
 
 	public String getId() {

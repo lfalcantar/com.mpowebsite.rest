@@ -12,6 +12,7 @@ import com.mpowebsite.rest.users.Administrator;
 import com.mpowebsite.rest.users.AuthenticatedUser;
 import com.mpowebsite.rest.users.MpoLead;
 import com.mpowebsite.rest.users.User;
+import com.mpowebsite.rest.util.Encode;
 import com.mpowebsite.rest.util.ToJSON;
 
 /**
@@ -129,9 +130,7 @@ public class UserQuery {
 			query.close();
 						
 		} catch (Exception e) {
-			
-			if(e.getClass().equals("com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException"))
-				System.out.println("Repeted  Entry");
+				e.printStackTrace();
 		}finally {
 			if(conn != null) conn.close();
 		}	
@@ -207,7 +206,7 @@ public class UserQuery {
 	 * @param id
 	 * @throws SQLException
 	 */
-	public static void deleteUser(String id) throws SQLException {
+	public static String deleteUser(String id) throws SQLException {
 		PreparedStatement query = null;
 		Connection conn = null;
 
@@ -229,20 +228,20 @@ public class UserQuery {
 		}finally {
 			if(conn != null) conn.close();
 		}
-		
+		return "";
 	}
 	
 	public static String logIn(String user, String password) throws Exception{
 		PreparedStatement query = null;
 		Connection conn = null;
-		String result = "fail";
+		String result = "INCORRECT USERNAME OR PASSWORD";
 
 		try {
 			conn = DbConnection.mpoDbConnection().getConnection();
 
 			query = conn.prepareStatement("Select * FROM SYSTEM_USERS WHERE USER_Email = ? AND USER_Password = ?");
 			query.setString(1, user);
-			query.setString(2, password);
+			query.setString(2, Encode.encode(password));
 			
 			/*Execute query*/
 			ResultSet resutlSet = query.executeQuery();
@@ -261,7 +260,7 @@ public class UserQuery {
 			}
 			
 		}
-
+		System.out.println("DEBUGG"+result);
 		return result;	
 	}
 	

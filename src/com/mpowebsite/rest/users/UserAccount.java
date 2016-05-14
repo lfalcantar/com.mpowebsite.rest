@@ -14,22 +14,18 @@ public class UserAccount {
 	 * @throws Exception 
 	 */
 	public static void createUser(UserType type, byte permissions, HashMap<String, String> userFields) throws Exception {
-		switch (type) {
-		case ADMINISTRATOR:
+		
+		String User_type = type.toString();
+		System.out.println("TYPEUSER"+User_type);
+		if(User_type.compareTo("ADMINISTRATOR") == 0)
 			createUser(new Administrator(), permissions,userFields);
-			break;
-		case MPO_LEAD:
+		else if(User_type.compareTo("MPO_LEAD") == 0)
 			createUser(new MpoLead(), permissions,userFields);
-			break;
-		case MPO_STAFF:
+		else if(User_type.compareTo("MPO_STAFF") == 0)
 			createUser(new MpoStaff(), permissions,userFields);
-			break;
-		case PROJECT_LEAD:
+		else if(User_type.compareTo("PROJECT_LEAD") == 0)
 			createUser(new ProjectLead(), permissions,userFields);
-			break;		
-		default:
-			throw new Exception("Incorrect User Type");
-		}
+		
 	}
 
 	/**
@@ -48,6 +44,7 @@ public class UserAccount {
 
 	private static void createUser(MpoLead mpoLead, byte permissions, HashMap<String, String> userFields) throws Exception {
 		// TODO Auto-generated method stub
+		System.out.println("ADING MPOLEAD");
 		mpoLead = populateUser(mpoLead, permissions, userFields);
 		UserQuery.createUser(mpoLead);
 
@@ -83,7 +80,7 @@ public class UserAccount {
 		administrator.setFirstName(userFields.get("firstName"));
 		administrator.setMiddleName(userFields.get("middleName"));
 		administrator.setLastNAme(userFields.get("lastName"));
-		administrator.setOrganization(userFields.get("organizations"));
+		administrator.setOrganization(userFields.get("organization"));
 		administrator.setDepartment(userFields.get("department"));
 		administrator.setPositionTitle(userFields.get("title"));
 		administrator.setDepartmentContactInformation(userFields.get("phone"));
@@ -94,7 +91,7 @@ public class UserAccount {
 	}
 	private static MpoStaff populateUser(MpoStaff mpoStaff,byte permissions, HashMap<String, String> userFields){
 		
-		mpoStaff.setId(GenerateID.generateProjectID(userFields.get("firstName"), userFields.get("lastName")));
+		mpoStaff.setId(GenerateID.generateUserID(userFields.get("firstName"), userFields.get("lastName")));
 		mpoStaff.setEmail(userFields.get("email"));
 		mpoStaff.setPassword(userFields.get("password"));
 		mpoStaff.setFirstName(userFields.get("firstName"));
@@ -111,7 +108,7 @@ public class UserAccount {
 	}
 	private static ProjectLead populateUser(ProjectLead projectLead,byte permissions, HashMap<String, String> userFields){
 		
-		projectLead.setId(GenerateID.generateProjectID(userFields.get("firstName"), userFields.get("lastName")));
+		projectLead.setId(GenerateID.generateUserID(userFields.get("firstName"), userFields.get("lastName")));
 		projectLead.setEmail(userFields.get("email"));
 		projectLead.setPassword(userFields.get("password"));
 		projectLead.setFirstName(userFields.get("firstName"));
@@ -128,7 +125,7 @@ public class UserAccount {
 	}
 	private static MpoLead populateUser(MpoLead mpoLead,byte permissions, HashMap<String, String> userFields){
 		
-		mpoLead.setId(GenerateID.generateProjectID(userFields.get("firstName"), userFields.get("lastName")));
+		mpoLead.setId(GenerateID.generateUserID(userFields.get("firstName"), userFields.get("lastName")));
 		mpoLead.setEmail(userFields.get("email"));
 		mpoLead.setPassword(userFields.get("password"));
 		mpoLead.setFirstName(userFields.get("firstName"));

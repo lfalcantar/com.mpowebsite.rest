@@ -1,17 +1,14 @@
 package com.mpowebsite.rest.users;
 
-import java.sql.*;
 import java.util.HashMap;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
+import javax.ws.rs.core.*;
 
-import org.codehaus.jettison.json.JSONArray;
-import com.mpowebsite.rest.db.*;/*Database*/
+
 import com.mpowebsite.rest.user.query.UserQuery;
-import com.mpowebsite.rest.util.*;
 
-import com.mpowebsite.rest.util.*;
 
 /**
  * This class represent the user:Administrator 
@@ -22,11 +19,11 @@ import com.mpowebsite.rest.util.*;
 public class Administrator extends AuthenticatedUser {
 
 	@Path("/Create")
-	@GET
-	public void createUser(@QueryParam("email") String email,@QueryParam("password") String password, @QueryParam("firstName") String firstName,
-						   @QueryParam("middleName") String middleName, @QueryParam("lastName") String LastName, @QueryParam("organizations") String organizations, 
-						   @QueryParam("department") String Department, @QueryParam("title") String title, @QueryParam("phone") String phone, 
-						   @QueryParam("userType") UserType type, @QueryParam("permissions") byte permissions) throws Exception {
+	@POST
+	public Response createUser(@FormParam("email") String email,@FormParam("password") String password, @FormParam("firstName") String firstName,
+			@FormParam("middleName") String middleName, @FormParam("lastName") String LastName, @FormParam("organization") String organizations, 
+			@FormParam("department") String Department, @FormParam("title") String title, @FormParam("phone") String phone, 
+			@FormParam("userType") UserType type, @FormParam("permissions") byte permissions) throws Exception {
 				
 		HashMap<String,	String> user = new HashMap<String, String>();
 		/*User Fields*/
@@ -35,12 +32,15 @@ public class Administrator extends AuthenticatedUser {
 		user.put("firstName", firstName);
 		user.put("middleName", middleName);
 		user.put("lastName", LastName);
-		user.put("organizations", organizations);
+		user.put("organization", organizations);
 		user.put("department", Department);
 		user.put("phone", phone);
 		user.put("title",title);
-		
-		UserAccount.createUser(type,permissions,user );
+				
+		System.out.println("ADDING NEW USER_ADMINISTRATOR");
+		UserAccount.createUser(type,permissions,user);
+		return Response.ok("success").header("Access-Control-Allow-Origin", "*").build();
+
 	}
 	
 	@Path("/delete")
